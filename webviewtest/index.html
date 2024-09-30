@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="scheme://?closeWebview=Y&a=1&b=2">link</a>
+    <a href="https://www.naver.com">naver</a>
+
+    <label for="cameraSelect">Camera:</label>
+    <select id="cameraSelect"></select>
+    
+    <label for="audioSelect">Microphone:</label>
+    <select id="audioSelect"></select>
+    
+    <br><br>
+    <video id="video" width="640" height="480" autoplay></video>
+
+    <script>
+        const videoElement = document.getElementById('video');
+        const cameraSelect = document.getElementById('cameraSelect');
+        const audioSelect = document.getElementById('audioSelect');
+
+        // Get the list of media devices (cameras and microphones)
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+            const videoDevices = devices.filter(device => device.kind === 'videoinput');
+            const audioDevices = devices.filter(device => device.kind === 'audioinput');
+            
+            videoDevices.forEach((device, index) => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.text = device.label || `Camera ${index + 1}`;
+                cameraSelect.appendChild(option);
+            });
+
+            audioDevices.forEach((device, index) => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.text = device.label || `Microphone ${index + 1}`;
+                audioSelect.appendChild(option);
+            });
+        });
+
+        // Function to start the selected camera and microphone
+        function startMedia(cameraId, audioId) {
+            const constraints = {
+                video: {
+                    deviceId: cameraId ? { exact: cameraId } : undefined
+                },
+                audio: {
+                    deviceId: audioId ? { exact: audioId } : undefined
+                }
+            };
+
+            navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+                videoElement.srcObject = stream;
+            }).catch(error => {
+                console.error('Error accessing media devices: ', error);
+            });
+        }
+
+        // Start the selected camera and microphone when the selection changes
+        cameraSelect.addEventListener('change', () => {
+            startMedia(cameraSelect.value, audioSelect.value);
+        });
+
+        audioSelect.addEventListener('change', () => {
+            startMedia(cameraSelect.value, audioSelect.value);
+        });
+
+        // Start the first camera and microphone by default
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+            const videoDevices = devices.filter(device => device.kind === 'videoinput');
+            const audioDevices = devices.filter(device => device.kind === 'audioinput');
+
+            if (videoDevices.length > 0) {
+                startMedia(videoDevices[0].deviceId, audioDevices.length > 0 ? audioDevices[0].deviceId : undefined);
+            }
+        });
+
+    </script>
+</body>
+</html>

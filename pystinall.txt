@@ -1,0 +1,24 @@
+그런데.....
+이렇게 생성하면 파일이 너무 많이 생성이 됩니다.
+우리는 pyinstaller에 option을 주어 여러 방법으로 exe 파일을 생성할 수 있습니다.
+pyinstaller --onefile --noconsole -n newName --icon=myicon.ico main.py
+--onefile : exe 파일 하나만 생성해줍니다. 물론, build, dist 폴더와 .spec 파일은 생성됩니다. 하지만 dist 폴더 내에는 exe 파일 하나만 남게 됩니다.
+--noconsole : exe 파일을 실행시켰을 때, 나타나는 console 화면이 보이지 않게 됩니다.
+--n newName : exe 파일의 이름을 python 파일의 이름과 다르게 설정할 수 있습니다.
+--icon=myicon.ico : exe 파일의 아이콘을 설정할 수 있습니다. 주의할 점은, 아이콘 이미지는 .ico 확장자만 가능합니다.
+아래에 이미지 파일을 .ico 파일로 변환해주는 사이트를 첨부합니다.
+https://icoconvert.com
+출처: https://tech-diary.tistory.com/7 [Koo's tech diary:티스토리]
+
+
+
+pyinstaller --noconfirm --onedir --console --add-data "C:\Users\user\Desktop\new-kiosk-pyqt5\static;static/"  "C:\Users\user\Desktop\new-kiosk-pyqt5\app.py"
+
+pyinstaller --noconfirm --onedir --console --add-data "./static;static/"  "app.py"
+
+
+
+###########\
+1. pip install pyqt5==5.14.2 // pyqt5==15 버전부터 python3.10 이랑 호환안댐
+https://www.inflearn.com/community/questions/764029/pyqt5-sip-%EC%97%90%EB%9F%AC
+
